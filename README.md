@@ -1,5 +1,5 @@
 # hublessapi [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
-> An api for the hubless iot platform to handle provisioning and editing devices.
+> Api for the hubless
 
 ## Installation
 
