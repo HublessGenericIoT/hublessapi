@@ -41,6 +41,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "express": "^4.13.4"
+    "async": "^1.5.2",
+    "aws-sdk": "^2.2.47",
+    "express": "^4.13.4",
+    "node-uuid": "^1.4.7"
   }
 }
