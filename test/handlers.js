@@ -5,8 +5,9 @@ chai.use(chaiAsPromised);
 chai.should();
 
 var assert = require('assert');
-var createNewDevice = require('../../lib/handlers/CreateNewDevice/index');
-var getDeviceByName = require('../../lib/handlers/GetDeviceByName/index');
+var createNewDevice = require('../lib/handlers/CreateNewDevice/index');
+var getDeviceByName = require('../lib/handlers/GetDeviceByName/index');
+var putDeviceForName = require('../lib/handlers/PutDeviceForName/index');
 
 describe("Aws calls", function() {
   describe('CreateNewDevice', function () {
@@ -46,5 +47,16 @@ describe("Aws calls", function() {
       .should.be.fulfilled
       .and.eventually.have.property("status");
     });
+  });
+
+  describe("PutDeviceForName", function() {
+    it("should complete normally", function() {
+      putDeviceForName.handler({
+        name: "b7aae05e-39e2-4385-85f4-a5914bc33d93",
+        room: "DavidsRoom",
+        type: "light"
+      }).should.be.fulfilled
+      .and.eventually.have.property("status");
+    })
   })
 })
