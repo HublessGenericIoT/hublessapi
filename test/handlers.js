@@ -62,6 +62,8 @@ describe("Aws calls", function() {
         name: "b7aae05e-39e2-4385-85f4-a5914bc33d93",
         room: "DavidsRoom",
         type: "light"
+      }).catch(function(err) {
+        console.error(err);
       }).should.be.fulfilled
       .and.eventually.have.property("status");
     })
