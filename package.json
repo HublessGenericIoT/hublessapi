@@ -42,6 +42,7 @@
   "license": "MIT",
   "dependencies": {
     "async": "^1.5.2",
+    "aws-promised": "^2.12.0",
     "aws-sdk": "^2.2.47",
     "express": "^4.13.4",
     "node-uuid": "^1.4.7"

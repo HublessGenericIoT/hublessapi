@@ -7,7 +7,7 @@ describe('CreateNewDeviceFunction', function () {
   it("should return a {status, payload} object", function(done) {
     createNewDevice.handler({
         "name": "test_" + Math.random(),
-        "room": "My_Living_Room",
+        "room": "MyLivingRoom",
         "type": "light"
     },
     {
@@ -25,7 +25,7 @@ describe('CreateNewDeviceFunction', function () {
 
   it("should require a name", function(done) {
     createNewDevice.handler({
-        "room": "My_Living_Room",
+        "room": "MyLivingRoom",
         "type": "light"
     },
     {
@@ -61,7 +61,7 @@ describe('CreateNewDeviceFunction', function () {
   it("should require a type", function(done) {
     createNewDevice.handler({
       "name": "something",
-      "room": "My_Living_Room",
+      "room": "MyLivingRoom",
     },
     {
       succeed: function succeed(data) {
