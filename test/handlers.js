@@ -64,7 +64,7 @@ describe("Aws calls", function() {
         type: "light"
       }).catch(function(err) {
         console.error(err);
-      }).should.be.fulfilled
+      }).should.eventally.be.fulfilled
       .and.eventually.have.property("status");
     })
   })
