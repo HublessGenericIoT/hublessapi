@@ -5,9 +5,9 @@ chai.use(chaiAsPromised);
 chai.should();
 
 var assert = require('assert');
-var createNewDevice = require('../lib/handlers/CreateNewDevice/index');
-var getDeviceByName = require('../lib/handlers/GetDeviceByName/index');
-var putDeviceForName = require('../lib/handlers/PutDeviceForName/index');
+var createNewDevice = require('../lib/handlers/CreateNewDevice');
+var getDeviceByName = require('../lib/handlers/GetDeviceByName');
+var putDeviceForName = require('../lib/handlers/PutDeviceForName');
 
 describe("Aws calls", function() {
   describe('CreateNewDevice', function () {
@@ -19,6 +19,13 @@ describe("Aws calls", function() {
     //   }).should.be.fulfilled
     //   .and.eventually.have.property("status");
     // });
+    it("should have a private file with data", function() {
+      var priv = require('../lib/handlers/CreateNewDevice/private');
+      assert(priv, "Private file exists.")
+      assert(priv.mqtt.url)
+      assert(priv.mqtt.username)
+      assert(priv.mqtt.password)
+    })
     it("should require a name", function() {
       return createNewDevice.handler({
         "room": "MyLivingRoom",
