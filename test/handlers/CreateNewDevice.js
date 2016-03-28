@@ -20,18 +20,18 @@ describe('CreateNewDeviceFunction', function () {
     return createNewDevice.handler({
       "room": "MyLivingRoom",
       "type": "light"
-    }).should.be.rejected;
+    }).should.eventually.be.rejected;
   });
   it("should require a room", function() {
     return createNewDevice.handler({
       "name": "test_" + Math.random(),
       "type": "light"
-    }).should.be.rejected;
+    }).should.eventually.be.rejected;
   });
   it("should require a type", function() {
     return createNewDevice.handler({
       "name": "test_" + Math.random(),
       "room": "MyLivingRoom",
-    }).should.be.rejected;
+    }).should.eventually.be.rejected;
   });
 });
