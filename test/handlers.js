@@ -26,24 +26,46 @@ describe("Aws calls", function() {
       assert(priv.mqtt.username)
       assert(priv.mqtt.password)
     })
-    it("should require a name", function() {
+    it("should fail for bad regex match", function() {
       return createNewDevice.handler({
-        "room": "MyLivingRoom",
-        "type": "light"
-      }).should.eventually.be.rejected;
+        name: "David's Device",
+        room: "Bedroom",
+        user: 0,
+        type: "light",
+        attributes: {
+          foo: "bar",
+          bar: 1
+        }
+      }).should.eventually.be.rejected.and.have.property("status").equal("Error");
     });
-    it("should require a room", function() {
+
+    it("should reject a shadow", function() {
       return createNewDevice.handler({
-        "name": "test_" + Math.random(),
-        "type": "light"
-      }).should.eventually.be.rejected;
+        name: "DavidsDevice",
+        room: "Bedroom",
+        user: 0,
+        type: "light",
+        attributes: {
+          foo: "bar",
+          bar: 1
+        },
+        shadow: {}
+      }).should.eventually.be.rejected.and.have.property("status").equal("Error");
     });
-    it("should require a type", function() {
+
+    it("should not allow an id", function() {
       return createNewDevice.handler({
-        "name": "test_" + Math.random(),
-        "room": "MyLivingRoom",
-      }).should.eventually.be.rejected;
-    });
+        id: "12412-124-315-14124-124123",
+        name: "DavidsDevice",
+        room: "Bedroom",
+        user: 0,
+        type: "light",
+        attributes: {
+          foo: "bar",
+          bar: 1
+        }
+      }).should.eventually.be.rejected.and.have.property("status").equal("Error");
+    })
   });
 
   // describe("GetDeviceByName", function() {

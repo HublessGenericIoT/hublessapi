@@ -40,7 +40,7 @@ Request body:
 
 ````
 {
-  //a device object as defined above. (without the id attribute)
+  //a device object as defined above. (without the id attribute or schema attribute.)
 }
 ````
 
@@ -50,7 +50,12 @@ Response body:
 {
   status: "Success|Error",
   payload: {
-    //the full device object, with id populated.
+    id: //the id of the created device.
+    mqttData: {
+      url: //the url to connect to the broker
+      username: //the username to connect.
+      password: //the password to connect.
+    }
   }
 }
 ````
