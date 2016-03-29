@@ -21,7 +21,7 @@ The API that will be implemented by this app is described below.
   name: //human readable name of the device.
   room: //room that the device is in.
   user: //user that the device belongs to. (Currently this is 1 for a user device and 0 for a testing device.)
-  type: //the class of device. enum{LIGHT, ...}
+  type: //the class of device. enum{LIGHT, ...} Currently not supported. 
   attributes: {
     //an arbitrary set of attributes attached to the device.
     //currently unsupported, but will be stored in dynamo.
