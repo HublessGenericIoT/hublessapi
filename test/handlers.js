@@ -46,26 +46,33 @@ describe("Aws calls", function() {
     });
   });
 
-  describe("GetDeviceByName", function() {
-    it("should complete normally", function() {
-      return getDeviceByName.handler({
-        name: "b7aae05e-39e2-4385-85f4-a5914bc33d93"
-      })
-      .should.be.fulfilled
-      .and.eventually.have.property("status");
-    });
-  });
+  // describe("GetDeviceByName", function() {
+  //   it("should complete normally", function() {
+  //     return getDeviceByName.handler({
+  //       name: "b7aae05e-39e2-4385-85f4-a5914bc33d93"
+  //     })
+  //     .should.be.fulfilled
+  //     .and.eventually.have.property("status");
+  //   });
+  // });
 
   describe("PutDeviceForName", function() {
     it("should complete normally", function() {
       putDeviceForName.handler({
-        name: "b7aae05e-39e2-4385-85f4-a5914bc33d93",
-        room: "DavidsRoom",
-        type: "light"
-      }).catch(function(err) {
-        console.error(err);
-      }).should.eventally.be.fulfilled
-      .and.eventually.have.property("status");
+        name: "thingy",
+        device: {
+          attributes: {
+            room : "DavidsRoom",
+            type: "light"
+          }
+        }
+      }).should.eventually.be.fulfilled
+      .and.have.property("status");
+    })
+    it("should error on a malformed request", function() {
+      putDeviceForName.handler({
+        lemon: "blerg"
+      }).should.eventually.be.rejected;
     })
   })
 })
