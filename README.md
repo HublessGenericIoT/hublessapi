@@ -21,6 +21,7 @@ The API that will be implemented by this app is described below.
   name: //human readable name of the device.
   room: //room that the device is in.
   user: //user that the device belongs to. (Currently this is 1 for a user device and 0 for a testing device.)
+  type: //the class of device. enum{LIGHT, ...}
   attributes: {
     //an arbitrary set of attributes attached to the device.
     //currently unsupported, but will be stored in dynamo.
@@ -60,7 +61,7 @@ Get all of the devices in the system. Returns a response in the form:
 
 a parameter `?user={userid}` can be provided to limit the devices returned. If not provided, it CURRENTLY defaults to 1. (aka user devices).
 
-NOTE: This response will be paged if it is too long. Information about paging will be added later. 
+NOTE: This response will be paged if it is too long. Information about paging will be added later.
 
 ````
 {
