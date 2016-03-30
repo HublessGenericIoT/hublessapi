@@ -11,14 +11,19 @@ var putDeviceForName = require('../lib/handlers/PutDeviceForName');
 
 describe("Aws calls", function() {
   describe('CreateNewDevice', function () {
-    // it("should create a simple object", function() {
-    //   return createNewDevice.handler({
-    //     "name": "test_" + Math.random(),
-    //     "room": "MyLivingRoom",
-    //     "type": "light"
-    //   }).should.be.fulfilled
-    //   .and.eventually.have.property("status");
-    // });
+    it("should create a simple object", function() {
+      return createNewDevice.handler({
+        "name": "test_" + Math.random(),
+        "room": "MyLivingRoom",
+        "type": "light",
+        "user": "0",
+        "attributes": {
+        }
+      }).catch(function(data) {
+        console.log(data)
+      }).should.be.fulfilled
+      .and.eventually.have.property("status");
+    });
     it("should have a private file with data", function() {
       var priv = require('../lib/handlers/CreateNewDevice/private');
       assert(priv, "Private file exists.")
@@ -30,7 +35,7 @@ describe("Aws calls", function() {
       return createNewDevice.handler({
         name: "David's Device",
         room: "Bedroom",
-        user: 0,
+        user: "0",
         type: "light",
         attributes: {
           foo: "bar",
@@ -39,19 +44,19 @@ describe("Aws calls", function() {
       }).should.eventually.be.rejected.and.have.property("status").equal("Error");
     });
 
-    it("should reject a shadow", function() {
-      return createNewDevice.handler({
-        name: "DavidsDevice",
-        room: "Bedroom",
-        user: 0,
-        type: "light",
-        attributes: {
-          foo: "bar",
-          bar: 1
-        },
-        shadow: {}
-      }).should.eventually.be.rejected.and.have.property("status").equal("Error");
-    });
+    // it("should reject a shadow", function() {
+    //   return createNewDevice.handler({
+    //     name: "DavidsDevice",
+    //     room: "Bedroom",
+    //     user: "0",
+    //     type: "light",
+    //     attributes: {
+    //       foo: "bar",
+    //       bar: 1
+    //     },
+    //     shadow: {}
+    //   }).should.eventually.be.rejected.and.have.property("status").equal("Error");
+    // });
 
     it("should not allow an id", function() {
       return createNewDevice.handler({
@@ -95,6 +100,25 @@ describe("Aws calls", function() {
       putDeviceForName.handler({
         lemon: "blerg"
       }).should.eventually.be.rejected;
+    })
+  })
+
+  describe("GetDeviceByName", function() {
+    it("should complete successfully.", function() {
+      getDeviceByName.handler({
+        id: "2c51f514-0aba-444b-81d9-eec49b8a6370"
+      }).should.eventually.be.fulfilled.and.equal({
+        status: "Success",
+        payload: {
+          id: "2c51f514-0aba-444b-81d9-eec49b8a6370",
+          name: "DavidsDevice",
+          room: "Bedroom",
+          user: "0",
+          type: "light",
+          attributes: {},
+          shadow: {}
+        }
+      })
     })
   })
 })

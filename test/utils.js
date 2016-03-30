@@ -14,7 +14,7 @@ describe("Utility Functions", function() {
       device = {
         name: "David's Device",
         room: "Bedroom",
-        user: 1,
+        user: "1",
         type: "light",
         attributes: {
           foo: "bar",
@@ -38,7 +38,12 @@ describe("Utility Functions", function() {
       assert.ok(deviceValidator.verifyNoIdNoShadow(device));
     })
 
-    it("verifyAllNoId should work with no shadow.", function() {
+    // it("verifyNoIdNoShadow should fail with shadowed object", function() {
+    //   device.shadow = {};
+    //   assert.equal(deviceValidator.verifyNoIdNoShadow(device), false);
+    // })
+
+    it("verifyAllNoShadow should work with no shadow.", function() {
       device.id = "b7aae05e-39e2-4385-85f4-a5914bc33d93";
       assert.ok(deviceValidator.verifyAllNoShadow(device));
     })
