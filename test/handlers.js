@@ -1,5 +1,6 @@
 'use strict';
 var chai = require("chai");
+var expect = chai.expect;
 var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 chai.should();
@@ -8,22 +9,23 @@ var assert = require('assert');
 var createNewDevice = require('../lib/handlers/CreateNewDevice');
 var getDeviceByName = require('../lib/handlers/GetDeviceByName');
 var putDeviceForName = require('../lib/handlers/PutDeviceForName');
+var getAllDevices = require('../lib/handlers/GetAllDevices');
 
 describe("Aws calls", function() {
   describe('CreateNewDevice', function () {
-    it("should create a simple object", function() {
-      return createNewDevice.handler({
-        "name": "test_" + Math.random(),
-        "room": "MyLivingRoom",
-        "type": "light",
-        "user": "0",
-        "attributes": {
-        }
-      }).catch(function(data) {
-        console.log(data)
-      }).should.be.fulfilled
-      .and.eventually.have.property("status");
-    });
+    // it("should create a simple device", function() {
+    //   return createNewDevice.handler({
+    //     "name": "test_" + Math.random(),
+    //     "room": "MyLivingRoom",
+    //     "type": "light",
+    //     "user": "0",
+    //     "attributes": {
+    //     }
+    //   }).catch(function(data) {
+    //     console.log(data)
+    //   }).should.be.fulfilled
+    //   .and.eventually.have.property("status");
+    // });
     it("should have a private file with data", function() {
       var priv = require('../lib/handlers/CreateNewDevice/private');
       assert(priv, "Private file exists.")
@@ -41,7 +43,7 @@ describe("Aws calls", function() {
           foo: "bar",
           bar: 1
         }
-      }).should.eventually.be.rejected.and.have.property("status").equal("Error");
+      }).should.eventually.be.rejected;
     });
 
     // it("should reject a shadow", function() {
@@ -63,13 +65,19 @@ describe("Aws calls", function() {
         id: "12412-124-315-14124-124123",
         name: "DavidsDevice",
         room: "Bedroom",
-        user: 0,
+        user: "0",
         type: "light",
         attributes: {
           foo: "bar",
           bar: 1
         }
-      }).should.eventually.be.rejected.and.have.property("status").equal("Error");
+      }).should.eventually.be.rejected;
+    })
+
+    it("should not allow a malformed object", function() {
+      return createNewDevice.handler({
+        blerg: "foobar"
+      }).should.eventually.be.rejected;
     })
   });
 
@@ -85,40 +93,47 @@ describe("Aws calls", function() {
 
   describe("PutDeviceForName", function() {
     it("should complete normally", function() {
-      putDeviceForName.handler({
-        name: "thingy",
-        device: {
-          attributes: {
-            room : "DavidsRoom",
-            type: "light"
-          }
-        }
-      }).should.eventually.be.fulfilled
-      .and.have.property("status");
+      return putDeviceForName.handler({
+        id: "2c51f514-0aba-444b-81d9-eec49b8a6370",
+        name: "DavidsDevice",
+        room: "Bedroom",
+        user: "0",
+        type: "light",
+        attributes: {}
+      }).should.eventually.be.fulfilled;
     })
-    it("should error on a malformed request", function() {
+    it("should error on a malformed request", function(done) {
       putDeviceForName.handler({
         lemon: "blerg"
-      }).should.eventually.be.rejected;
+      }).then(function(data) {
+        assert.fail("It shouldnt complete.")
+        done();
+      }).catch(function(err) {
+        assert.ok(err);
+        done();
+      })
     })
   })
 
   describe("GetDeviceByName", function() {
-    it("should complete successfully.", function() {
+    it("should complete successfully.", function(done) {
       getDeviceByName.handler({
         id: "2c51f514-0aba-444b-81d9-eec49b8a6370"
-      }).should.eventually.be.fulfilled.and.equal({
-        status: "Success",
-        payload: {
-          id: "2c51f514-0aba-444b-81d9-eec49b8a6370",
-          name: "DavidsDevice",
-          room: "Bedroom",
-          user: "0",
-          type: "light",
-          attributes: {},
-          shadow: {}
-        }
+      }).then(function(data) {
+        assert.ok(data);
+        assert.equals(data.status, "Success");
+        done();
+      }).catch(function(err) {
+        assert.fail(err); //should not fail.
+        done();
       })
+    })
+  })
+
+  describe("GetAllDevices", function() {
+    it("should complete normally with an array payload", function() {
+      return getAllDevices.handler({})
+      .should.eventually.be.fulfilled.and.payload.should.be.a("Array");
     })
   })
 })
