@@ -105,7 +105,7 @@ describe("Aws calls", function() {
 
   describe("PutDeviceForName", function() {
     it("should complete normally", function(done) {
-      putDeviceForName.handler({
+      putDeviceForName.handler("2c51f514-0aba-444b-81d9-eec49b8a6370", {
         id: "2c51f514-0aba-444b-81d9-eec49b8a6370",
         name: "DavidsDevice",
         room: "Bedroom",
@@ -124,8 +124,26 @@ describe("Aws calls", function() {
       })
     })
     it("should error on a malformed request", function(done) {
-      putDeviceForName.handler({
+      putDeviceForName.handler("2c51f514-0aba-444b-81d9-eec49b8a6370", {
         lemon: "blerg"
+      }, function(err, result) {
+        if(err) {
+          assert.ok(err);
+          return done();
+        }
+        assert.fail(result, "Should not complete.");
+        done();
+      })
+    })
+
+    it("should error if ids are different.", function(done) {
+      putDeviceForName.handler("2c51f514-0aba-444b-81d9-eec49b8a6370", {
+        id: "ffffffff-0aba-444b-81d9-eec49b8a6370",
+        name: "DavidsDevice",
+        room: "Bedroom",
+        user: "0",
+        type: "light",
+        attributes: {}
       }, function(err, result) {
         if(err) {
           assert.ok(err);
