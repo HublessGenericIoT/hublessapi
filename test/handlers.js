@@ -33,8 +33,8 @@ describe("Aws calls", function() {
       assert(priv.mqtt.username)
       assert(priv.mqtt.password)
     })
-    it("should fail for bad regex match", function() {
-      return createNewDevice.handler({
+    it("should fail for bad regex match", function(done) {
+      createNewDevice.handler({
         name: "David's Device",
         room: "Bedroom",
         user: "0",
@@ -43,25 +43,31 @@ describe("Aws calls", function() {
           foo: "bar",
           bar: 1
         }
-      }).should.eventually.be.rejected;
+      }, function(err, result) {
+        assert.ok(err); //error should exist.
+        done();
+      })
     });
 
-    // it("should reject a shadow", function() {
-    //   return createNewDevice.handler({
-    //     name: "DavidsDevice",
-    //     room: "Bedroom",
-    //     user: "0",
-    //     type: "light",
-    //     attributes: {
-    //       foo: "bar",
-    //       bar: 1
-    //     },
-    //     shadow: {}
-    //   }).should.eventually.be.rejected.and.have.property("status").equal("Error");
-    // });
-
-    it("should not allow an id", function() {
+    it("should reject a shadow", function(done) {
       return createNewDevice.handler({
+        name: "DavidsDevice",
+        room: "Bedroom",
+        user: "0",
+        type: "light",
+        attributes: {
+          foo: "bar",
+          bar: 1
+        },
+        shadow: {}
+      }, function(err, result) {
+        assert.ok(err); //error should exist.
+        done();
+      });
+    });
+
+    it("should not allow an id", function(done) {
+      createNewDevice.handler({
         id: "12412-124-315-14124-124123",
         name: "DavidsDevice",
         room: "Bedroom",
@@ -71,13 +77,19 @@ describe("Aws calls", function() {
           foo: "bar",
           bar: 1
         }
-      }).should.eventually.be.rejected;
+      }, function(err, result) {
+        assert.ok(err); //error should exist.
+        done();
+      })
     })
 
-    it("should not allow a malformed object", function() {
-      return createNewDevice.handler({
+    it("should not allow a malformed object", function(done) {
+      createNewDevice.handler({
         blerg: "foobar"
-      }).should.eventually.be.rejected;
+      }, function(err, result) {
+        assert.ok(err); //error should exist.
+        done();
+      });
     })
   });
 
@@ -92,24 +104,34 @@ describe("Aws calls", function() {
   // });
 
   describe("PutDeviceForName", function() {
-    it("should complete normally", function() {
-      return putDeviceForName.handler({
+    it("should complete normally", function(done) {
+      putDeviceForName.handler({
         id: "2c51f514-0aba-444b-81d9-eec49b8a6370",
         name: "DavidsDevice",
         room: "Bedroom",
         user: "0",
         type: "light",
         attributes: {}
-      }).should.eventually.be.fulfilled;
+      }, function(err, result) {
+        if(err) {
+          console.log("Error: " + err, err.stack);
+          assert.fail(err);
+          return done();
+        }
+        assert.ok(result);
+        assert.equal(result.status, "Success");
+        done();
+      })
     })
     it("should error on a malformed request", function(done) {
       putDeviceForName.handler({
         lemon: "blerg"
-      }).then(function(data) {
-        assert.fail("It shouldnt complete.")
-        done();
-      }).catch(function(err) {
-        assert.ok(err);
+      }, function(err, result) {
+        if(err) {
+          assert.ok(err);
+          return done();
+        }
+        assert.fail(result, "Should not complete.");
         done();
       })
     })
@@ -119,21 +141,26 @@ describe("Aws calls", function() {
     it("should complete successfully.", function(done) {
       getDeviceByName.handler({
         id: "2c51f514-0aba-444b-81d9-eec49b8a6370"
-      }).then(function(data) {
-        assert.ok(data);
-        assert.equals(data.status, "Success");
+      }, function(err, result) {
+        if(err) {
+          assert.fail(err);
+          return done();
+        }
+        assert.ok(result);
+        assert.equal(result.status, "Success");
         done();
-      }).catch(function(err) {
-        assert.fail(err); //should not fail.
-        done();
-      })
+      });
     })
   })
 
   describe("GetAllDevices", function() {
-    it("should complete normally with an array payload", function() {
-      return getAllDevices.handler({})
-      .should.eventually.be.fulfilled.and.payload.should.be.a("Array");
+    it("should complete normally with an array payload", function(done) {
+      return getAllDevices.handler({}, function(err, result) {
+        if(err) assert.fail(err);
+        assert.ok(result);
+        assert.equal(result.status, "Success");
+        done();
+      })
     })
   })
 })
