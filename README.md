@@ -71,7 +71,10 @@ NOTE: This response will be paged if it is too long. Information about paging wi
 ````
 {
     "status": "Success|Error",
-    "payload": [] //an array of devices, as defined above.
+    "payload": {
+        "devices": [], //array of devices
+        "nextToken": "" //paging token.
+    }
 }
 ````
 
